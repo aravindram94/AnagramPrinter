@@ -44,7 +44,7 @@ unsigned long long int hashCode(string input)
     {
         hashcode *= CHAR_TO_PRIME[input[i]];
     }
-    cout << input << " " << hashcode << endl;
+    //cout << input << " " << hashcode << endl;
     return hashcode;
 }
 
@@ -54,6 +54,7 @@ map<unsigned long long int, string> createHashMap(string fileName)
 	ifstream wordFile("sowpods.txt");
 	string line;
 	int hashVal;
+	string strWithSentinel;
 	map<unsigned long long int, string> hashCodeMap;
 	while (wordFile >> line)
 	{
@@ -61,6 +62,7 @@ map<unsigned long long int, string> createHashMap(string fileName)
 		hashVal = hashCode(line);
 		if (hashCodeMap.find(hashVal) == hashCodeMap.end())
 		{
+		    strWithSentinel = line + "~";
 			hashCodeMap.insert(std::pair<unsigned long long int, string>(hashVal, line));
 		}
 		else
@@ -75,14 +77,27 @@ map<unsigned long long int, string> createHashMap(string fileName)
 
     return hashCodeMap;
 }
-
+bool hasSpace(string input)
+{
+    if (input.find(" ") == string::npos)
+    {
+        return false;
+    }
+    return true;
+}
 void printHashMap(map<unsigned long long int, string> hCMap)
 {
 	map<unsigned long long int, string>::iterator it;
+    ofstream output;
+    output.open("output.txt");
 
 	for (it = hCMap.begin(); it != hCMap.end(); it++)
 	{
-		cout << it -> first << " : " << it -> second << endl;
+        if (hasSpace(it -> second))
+        {
+            cout << it -> second << endl;
+            output << it -> second << endl;
+        }
 	}
 }
 
